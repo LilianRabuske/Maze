@@ -30,19 +30,148 @@ public class Labirinto {
         return Labirinto;
     }
 
-    private Boolean Labirinto (char [][] Labirinto, int rowAtual, int columnAtual, int rowAntigo, int columnAntigo){
-        if(rowAtual == 0 && columnAtual == 0){
-            //Se o labirinto encontrou D retorna true
-            //Se o Labirinto Não encontrou saída então retorna false
+    private Boolean Labirinto (char [][] Labirinto, int rowAtual, int columnAtual){
+        Boolean verifica1 =  false;
+        Boolean verifica2 =  false;
+        Boolean verifica3 =  false;
+        Boolean verifica4 =  false;
+        Labirinto[rowAtual][columnAtual] = 'O';
+        if(Labirinto[rowAtual][columnAtual] != 'D') {
+            //Se for posição [0,0]
+            if (rowAtual == 0 && columnAtual == 0) {
+                //Se o labirinto encontrou D retorna true
+                //Se o Labirinto Não encontrou saída então retorna false
 
-            if(Labirinto [rowAtual + 1][columnAtual] == ' ' && Labirinto [rowAtual + 1][columnAtual] != Labirinto [rowAntigo][columnAntigo]){
-                Labirinto()
+                //[1,0]
+                if (Labirinto[rowAtual + 1][columnAtual] == ' ' && Labirinto[rowAtual + 1][columnAtual] != 'O') {
+                   verifica1 =  Labirinto(Labirinto, rowAtual + 1, columnAtual);
+                }
+                //[0,1]
+                if (Labirinto[rowAtual][columnAtual + 1] == ' ' && Labirinto[rowAtual][columnAtual + 1] != 'O') {
+                    verifica2 = Labirinto(Labirinto, rowAtual, columnAtual + 1);
+                }
+            }
+            //[length-1, 0]
+            else if (rowAtual == Labirinto.length - 1 && columnAtual == 0) {
+
+                //[length - 2, 0]
+                if (Labirinto[rowAtual - 1][columnAtual] == ' ' && Labirinto[rowAtual - 1][columnAtual] != 'O') {
+                   verifica1 = Labirinto(Labirinto, rowAtual - 1, columnAtual);
+                }
+                //[length - 1, 1]
+                if (Labirinto[rowAtual][columnAtual + 1] == ' ' && Labirinto[rowAtual][columnAtual + 1] != 'O') {
+                   verifica2 = Labirinto(Labirinto, rowAtual, columnAtual + 1);
+                }
+            }
+            //[0, length - 1]
+            else if (rowAtual == 0 && columnAtual == Labirinto.length - 1) {
+
+                //[0, length - 2]
+                if (Labirinto[rowAtual][columnAtual - 1] == ' ' && Labirinto[rowAtual][columnAtual - 1] != 'O') {
+                  verifica1 =  Labirinto(Labirinto, rowAtual, columnAtual - 1);
+                }
+                //[1, length - 1]
+                if (Labirinto[rowAtual + 1][columnAtual] == ' ' && Labirinto[rowAtual + 1][columnAtual] != 'O') {
+                    verifica2 = Labirinto(Labirinto, rowAtual + 1, columnAtual);
+                }
+            }
+            //[length - 1, [0].length-1
+            else if (rowAtual == Labirinto.length - 1 && columnAtual == Labirinto[0].length - 1) {
+
+                //[length-1, length - 2]
+                if (Labirinto[rowAtual][columnAtual - 1] == ' ' && Labirinto[rowAtual][columnAtual - 1] != 'O') {
+                    verifica1 =  Labirinto(Labirinto, rowAtual, columnAtual - 1);
+                }
+                //[length-2, length - 1]
+                if (Labirinto[rowAtual - 1][columnAtual] == ' ' && Labirinto[rowAtual - 1][columnAtual] != 'O') {
+                    verifica2 =  Labirinto(Labirinto, rowAtual - 1, columnAtual);
+                }
+            }
+            //[0, y]
+            else if (rowAtual == 0 && columnAtual != Labirinto[0].length - 1 && columnAtual != 0) {
+
+
+                if (Labirinto[rowAtual][columnAtual - 1] == ' ' && Labirinto[rowAtual][columnAtual - 1] != 'O') {
+                    verifica1 =  Labirinto(Labirinto, rowAtual, columnAtual - 1);
+                }
+                if (Labirinto[rowAtual][columnAtual + 1] == ' ' && Labirinto[rowAtual][columnAtual + 1] != 'O') {
+                    verifica2 =  Labirinto(Labirinto, rowAtual, columnAtual + 1);
+                }
+                if (Labirinto[rowAtual + 1][columnAtual] == ' ' && Labirinto[rowAtual + 1][columnAtual] != 'O') {
+                    verifica3 =  Labirinto(Labirinto, rowAtual + 1, columnAtual);
+                }
+            }
+            //[x, 0]
+            else if (rowAtual != Labirinto.length - 1 && rowAtual != 0 && columnAtual == 0) {
+
+
+                if (Labirinto[rowAtual - 1][columnAtual] == ' ' && Labirinto[rowAtual - 1][columnAtual] != 'O') {
+                    verifica1 = Labirinto(Labirinto, rowAtual - 1, columnAtual);
+                }
+                if (Labirinto[rowAtual][columnAtual + 1] == ' ' && Labirinto[rowAtual][columnAtual + 1] != 'O') {
+                    verifica2 =  Labirinto(Labirinto, rowAtual, columnAtual + 1);
+                }
+                if (Labirinto[rowAtual + 1][columnAtual] == ' ' && Labirinto[rowAtual + 1][columnAtual] != 'O') {
+                    verifica3 = Labirinto(Labirinto, rowAtual + 1, columnAtual);
+                }
+            }
+
+            //[x, [0].length-1]
+            else if (rowAtual != Labirinto.length - 1 && rowAtual != 0 && columnAtual == Labirinto[0].length - 1) {
+                if (Labirinto[rowAtual - 1][columnAtual] == ' ' && Labirinto[rowAtual - 1][columnAtual] != 'O') {
+                    verifica1 =  Labirinto(Labirinto, rowAtual - 1, columnAtual);
+                }
+                if (Labirinto[rowAtual][columnAtual - 1] == ' ' && Labirinto[rowAtual][columnAtual - 1] != 'O') {
+                    verifica2 =  Labirinto(Labirinto, rowAtual, columnAtual - 1);
+                }
+                if (Labirinto[rowAtual + 1][columnAtual] == ' ' && Labirinto[rowAtual + 1][columnAtual] != 'O') {
+                    verifica3 =  Labirinto(Labirinto, rowAtual + 1, columnAtual);
+                }
+            }
+            //[length-1, y]
+            else if (rowAtual == Labirinto.length - 1 && columnAtual != Labirinto.length - 1 && columnAtual != 0) {
+                if (Labirinto[rowAtual - 1][columnAtual] == ' ' && Labirinto[rowAtual - 1][columnAtual] != 'O') {
+                    verifica1 = Labirinto(Labirinto, rowAtual - 1, columnAtual);
+                }
+                if (Labirinto[rowAtual][columnAtual - 1] == ' ' && Labirinto[rowAtual][columnAtual - 1] != 'O') {
+                    verifica2 = Labirinto(Labirinto, rowAtual, columnAtual - 1);
+                }
+                if (Labirinto[rowAtual][columnAtual + 1] == ' ' && Labirinto[rowAtual][columnAtual + 1] != 'O') {
+                    verifica3 = Labirinto(Labirinto, rowAtual, columnAtual + 1);
+                }
+
+            } else {
+                if (Labirinto[rowAtual - 1][columnAtual] == ' ' && Labirinto[rowAtual - 1][columnAtual] != 'O') {
+                    verifica1 = Labirinto(Labirinto, rowAtual - 1, columnAtual);
+                }
+                if (Labirinto[rowAtual][columnAtual - 1] == ' ' && Labirinto[rowAtual][columnAtual - 1] != 'O') {
+                    verifica2 =  Labirinto(Labirinto, rowAtual, columnAtual - 1);
+                }
+                if (Labirinto[rowAtual][columnAtual + 1] == ' ' && Labirinto[rowAtual][columnAtual + 1] != 'O') {
+                    verifica2 =  Labirinto(Labirinto, rowAtual, columnAtual + 1);
+                }
+                if (Labirinto[rowAtual + 1][columnAtual] == ' ' && Labirinto[rowAtual + 1][columnAtual] != 'O') {
+                    verifica2 =  Labirinto(Labirinto, rowAtual + 1, columnAtual);
+                }
+
+            }
+            if(!verifica1 && !verifica2 && !verifica3 && !verifica4) {
+                return false;
+            } else{
+                return true;
             }
         }
+        else {
+           return true;
+        }
+
+
+
     }
 
     public Boolean Labirinto(){
-        
+
+
     }
 
 
