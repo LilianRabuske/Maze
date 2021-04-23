@@ -1,181 +1,211 @@
 import com.sun.org.apache.xpath.internal.operations.Bool;
 
 import java.io.*;
+import java.util.Scanner;
 
 public class Labirinto {
+    private char[][] Labirinto;
+    private int row = 0;
+    private int column;
 
 
+    public char[][] carregaLabirinto(String File) {
 
-
-
-    public char[][] carregaLabirinto(String File) throws IOException { //Adicionar exceptions
-
-        ; //dentro dos parenteses irá o parametro da método
-
-        FileReader fr = new FileReader(File);
-        BufferedReader br = new BufferedReader(fr);
-        String rowString = br.readLine();
-        String columnString = br.readLine();
-        int row = Integer.parseInt(rowString);
-        int column = Integer.parseInt(columnString);
-        char [][]Labirinto = new char[row][column];
-        for(int r = 0; r < row ; r++ ){ //por linha
-            String line = br.readLine();
-            for (int c = 0; c < column; c++){
-                Labirinto [r][c] = line.charAt(c);
+        try {
+            FileReader fr = new FileReader(File);
+            BufferedReader br = new BufferedReader(fr);
+            try {
+                String rowString = br.readLine();
+                String columnString = br.readLine();
+                row = Integer.parseInt(rowString);
+                column = Integer.parseInt(columnString);
+            } catch (NumberFormatException e) {
+                System.out.println("Há alteração nas linhas do documento que indicam o tamanho da matriz.");
+                System.exit(1);
             }
 
+            try {
+                Labirinto = new char[row][column];
+                for (int r = 0; r < row; r++) {
+                    String line = br.readLine();
+                    for (int c = 0; c < column; c++) {
+                        Labirinto[r][c] = line.charAt(c);
+                    }
+                }
+
+            } catch (IndexOutOfBoundsException e) {
+                System.out.println("Componentes do labirinto não estão de acordo com o tamanho do mesmo. Verificar se não há espaços sem conteúdo.");
+                System.exit(1);
+            }
+
+            br.close();
+
+        } catch (IOException e) {
+            System.out.println("Não foi possível ler o arquivo.");
+            System.exit(1);
         }
-    br.close();
         return Labirinto;
     }
 
-    private Boolean Labirinto (char [][] Labirinto, int rowAtual, int columnAtual){
-        Boolean verifica1 =  false;
-        Boolean verifica2 =  false;
-        Boolean verifica3 =  false;
-        Boolean verifica4 =  false;
-        Labirinto[rowAtual][columnAtual] = 'O';
-        if(Labirinto[rowAtual][columnAtual] != 'D') {
-            //Se for posição [0,0]
+
+    private Boolean Labirinto(char[][] Labirinto, int rowAtual, int columnAtual) {
+        Boolean verifica1 = false;
+        Boolean verifica2 = false;
+        Boolean verifica3 = false;
+        Boolean verifica4 = false;
+        //Para conferir como o labirinto é percorrido
+        //System.out.print(toString(Labirinto) + "\n \n ");
+        if (Labirinto[rowAtual][columnAtual] == 'D') {
+            System.out.println("Aqui chegou o fim");
+            return true;
+        } else {
+            Labirinto[rowAtual][columnAtual] = 'O';
+
             if (rowAtual == 0 && columnAtual == 0) {
-                //Se o labirinto encontrou D retorna true
-                //Se o Labirinto Não encontrou saída então retorna false
 
-                //[1,0]
-                if (Labirinto[rowAtual + 1][columnAtual] == ' ' && Labirinto[rowAtual + 1][columnAtual] != 'O') {
-                   verifica1 =  Labirinto(Labirinto, rowAtual + 1, columnAtual);
+                if (Labirinto[rowAtual + 1][columnAtual] != 'X' && Labirinto[rowAtual + 1][columnAtual] != 'O') {
+                    verifica1 = Labirinto(Labirinto, rowAtual + 1, columnAtual);
+
                 }
-                //[0,1]
-                if (Labirinto[rowAtual][columnAtual + 1] == ' ' && Labirinto[rowAtual][columnAtual + 1] != 'O') {
+
+                if (Labirinto[rowAtual][columnAtual + 1] != 'X' && Labirinto[rowAtual][columnAtual + 1] != 'O') {
                     verifica2 = Labirinto(Labirinto, rowAtual, columnAtual + 1);
-                }
-            }
-            //[length-1, 0]
-            else if (rowAtual == Labirinto.length - 1 && columnAtual == 0) {
 
-                //[length - 2, 0]
-                if (Labirinto[rowAtual - 1][columnAtual] == ' ' && Labirinto[rowAtual - 1][columnAtual] != 'O') {
-                   verifica1 = Labirinto(Labirinto, rowAtual - 1, columnAtual);
                 }
-                //[length - 1, 1]
-                if (Labirinto[rowAtual][columnAtual + 1] == ' ' && Labirinto[rowAtual][columnAtual + 1] != 'O') {
-                   verifica2 = Labirinto(Labirinto, rowAtual, columnAtual + 1);
-                }
-            }
-            //[0, length - 1]
-            else if (rowAtual == 0 && columnAtual == Labirinto.length - 1) {
+            } else if (rowAtual == Labirinto.length - 1 && columnAtual == 0) {
 
-                //[0, length - 2]
-                if (Labirinto[rowAtual][columnAtual - 1] == ' ' && Labirinto[rowAtual][columnAtual - 1] != 'O') {
-                  verifica1 =  Labirinto(Labirinto, rowAtual, columnAtual - 1);
+
+                if (Labirinto[rowAtual - 1][columnAtual] != 'X' && Labirinto[rowAtual - 1][columnAtual] != 'O') {
+                    verifica1 = Labirinto(Labirinto, rowAtual - 1, columnAtual);
+
                 }
-                //[1, length - 1]
-                if (Labirinto[rowAtual + 1][columnAtual] == ' ' && Labirinto[rowAtual + 1][columnAtual] != 'O') {
+
+                if (Labirinto[rowAtual][columnAtual + 1] != 'X' && Labirinto[rowAtual][columnAtual + 1] != 'O') {
+                    verifica2 = Labirinto(Labirinto, rowAtual, columnAtual + 1);
+
+                }
+            } else if (rowAtual == 0 && columnAtual == Labirinto[0].length - 1) {
+
+
+                if (Labirinto[rowAtual][columnAtual - 1] != 'X' && Labirinto[rowAtual][columnAtual - 1] != 'O') {
+                    verifica1 = Labirinto(Labirinto, rowAtual, columnAtual - 1);
+
+                }
+
+                if (Labirinto[rowAtual + 1][columnAtual] != 'X' && Labirinto[rowAtual + 1][columnAtual] != 'O') {
                     verifica2 = Labirinto(Labirinto, rowAtual + 1, columnAtual);
-                }
-            }
-            //[length - 1, [0].length-1
-            else if (rowAtual == Labirinto.length - 1 && columnAtual == Labirinto[0].length - 1) {
 
-                //[length-1, length - 2]
-                if (Labirinto[rowAtual][columnAtual - 1] == ' ' && Labirinto[rowAtual][columnAtual - 1] != 'O') {
-                    verifica1 =  Labirinto(Labirinto, rowAtual, columnAtual - 1);
                 }
-                //[length-2, length - 1]
-                if (Labirinto[rowAtual - 1][columnAtual] == ' ' && Labirinto[rowAtual - 1][columnAtual] != 'O') {
-                    verifica2 =  Labirinto(Labirinto, rowAtual - 1, columnAtual);
-                }
-            }
-            //[0, y]
-            else if (rowAtual == 0 && columnAtual != Labirinto[0].length - 1 && columnAtual != 0) {
+            } else if (rowAtual == Labirinto.length - 1 && columnAtual == Labirinto[0].length - 1) {
 
 
-                if (Labirinto[rowAtual][columnAtual - 1] == ' ' && Labirinto[rowAtual][columnAtual - 1] != 'O') {
-                    verifica1 =  Labirinto(Labirinto, rowAtual, columnAtual - 1);
+                if (Labirinto[rowAtual][columnAtual - 1] != 'X' && Labirinto[rowAtual][columnAtual - 1] != 'O') {
+                    verifica1 = Labirinto(Labirinto, rowAtual, columnAtual - 1);
+
                 }
-                if (Labirinto[rowAtual][columnAtual + 1] == ' ' && Labirinto[rowAtual][columnAtual + 1] != 'O') {
-                    verifica2 =  Labirinto(Labirinto, rowAtual, columnAtual + 1);
+
+                if (Labirinto[rowAtual - 1][columnAtual] != 'X' && Labirinto[rowAtual - 1][columnAtual] != 'O') {
+                    verifica2 = Labirinto(Labirinto, rowAtual - 1, columnAtual);
+
                 }
-                if (Labirinto[rowAtual + 1][columnAtual] == ' ' && Labirinto[rowAtual + 1][columnAtual] != 'O') {
-                    verifica3 =  Labirinto(Labirinto, rowAtual + 1, columnAtual);
-                }
-            }
-            //[x, 0]
-            else if (rowAtual != Labirinto.length - 1 && rowAtual != 0 && columnAtual == 0) {
+            } else if (rowAtual == 0 && columnAtual != Labirinto[0].length - 1 && columnAtual != 0) {
 
 
-                if (Labirinto[rowAtual - 1][columnAtual] == ' ' && Labirinto[rowAtual - 1][columnAtual] != 'O') {
-                    verifica1 = Labirinto(Labirinto, rowAtual - 1, columnAtual);
+                if (Labirinto[rowAtual][columnAtual - 1] != 'X' && Labirinto[rowAtual][columnAtual - 1] != 'O') {
+                    verifica1 = Labirinto(Labirinto, rowAtual, columnAtual - 1);
+
                 }
-                if (Labirinto[rowAtual][columnAtual + 1] == ' ' && Labirinto[rowAtual][columnAtual + 1] != 'O') {
-                    verifica2 =  Labirinto(Labirinto, rowAtual, columnAtual + 1);
+                if (Labirinto[rowAtual][columnAtual + 1] != 'X' && Labirinto[rowAtual][columnAtual + 1] != 'O') {
+                    verifica2 = Labirinto(Labirinto, rowAtual, columnAtual + 1);
+
                 }
-                if (Labirinto[rowAtual + 1][columnAtual] == ' ' && Labirinto[rowAtual + 1][columnAtual] != 'O') {
+                if (Labirinto[rowAtual + 1][columnAtual] != 'X' && Labirinto[rowAtual + 1][columnAtual] != 'O') {
                     verifica3 = Labirinto(Labirinto, rowAtual + 1, columnAtual);
-                }
-            }
 
-            //[x, [0].length-1]
-            else if (rowAtual != Labirinto.length - 1 && rowAtual != 0 && columnAtual == Labirinto[0].length - 1) {
-                if (Labirinto[rowAtual - 1][columnAtual] == ' ' && Labirinto[rowAtual - 1][columnAtual] != 'O') {
-                    verifica1 =  Labirinto(Labirinto, rowAtual - 1, columnAtual);
                 }
-                if (Labirinto[rowAtual][columnAtual - 1] == ' ' && Labirinto[rowAtual][columnAtual - 1] != 'O') {
-                    verifica2 =  Labirinto(Labirinto, rowAtual, columnAtual - 1);
-                }
-                if (Labirinto[rowAtual + 1][columnAtual] == ' ' && Labirinto[rowAtual + 1][columnAtual] != 'O') {
-                    verifica3 =  Labirinto(Labirinto, rowAtual + 1, columnAtual);
-                }
-            }
-            //[length-1, y]
-            else if (rowAtual == Labirinto.length - 1 && columnAtual != Labirinto.length - 1 && columnAtual != 0) {
-                if (Labirinto[rowAtual - 1][columnAtual] == ' ' && Labirinto[rowAtual - 1][columnAtual] != 'O') {
+            } else if (rowAtual != Labirinto.length - 1 && rowAtual != 0 && columnAtual == 0) {
+
+
+                if (Labirinto[rowAtual - 1][columnAtual] != 'X' && Labirinto[rowAtual - 1][columnAtual] != 'O') {
                     verifica1 = Labirinto(Labirinto, rowAtual - 1, columnAtual);
+
                 }
-                if (Labirinto[rowAtual][columnAtual - 1] == ' ' && Labirinto[rowAtual][columnAtual - 1] != 'O') {
+                if (Labirinto[rowAtual][columnAtual + 1] != 'X' && Labirinto[rowAtual][columnAtual + 1] != 'O') {
+                    verifica2 = Labirinto(Labirinto, rowAtual, columnAtual + 1);
+
+                }
+                if (Labirinto[rowAtual + 1][columnAtual] != 'X' && Labirinto[rowAtual + 1][columnAtual] != 'O') {
+                    verifica3 = Labirinto(Labirinto, rowAtual + 1, columnAtual);
+
+                }
+            } else if (rowAtual != Labirinto.length - 1 && rowAtual != 0 && columnAtual == Labirinto[0].length - 1) {
+                if (Labirinto[rowAtual - 1][columnAtual] != 'X' && Labirinto[rowAtual - 1][columnAtual] != 'O') {
+                    verifica1 = Labirinto(Labirinto, rowAtual - 1, columnAtual);
+
+                }
+                if (Labirinto[rowAtual][columnAtual - 1] != 'X' && Labirinto[rowAtual][columnAtual - 1] != 'O') {
                     verifica2 = Labirinto(Labirinto, rowAtual, columnAtual - 1);
+
                 }
-                if (Labirinto[rowAtual][columnAtual + 1] == ' ' && Labirinto[rowAtual][columnAtual + 1] != 'O') {
+                if (Labirinto[rowAtual + 1][columnAtual] != 'X' && Labirinto[rowAtual + 1][columnAtual] != 'O') {
+                    verifica3 = Labirinto(Labirinto, rowAtual + 1, columnAtual);
+
+                }
+            } else if (rowAtual == Labirinto.length - 1 && columnAtual != Labirinto[0].length - 1 && columnAtual != 0) {
+                if (Labirinto[rowAtual - 1][columnAtual] != 'X' && Labirinto[rowAtual - 1][columnAtual] != 'O') {
+                    verifica1 = Labirinto(Labirinto, rowAtual - 1, columnAtual);
+
+                }
+                if (Labirinto[rowAtual][columnAtual - 1] != 'X' && Labirinto[rowAtual][columnAtual - 1] != 'O') {
+                    verifica2 = Labirinto(Labirinto, rowAtual, columnAtual - 1);
+
+                }
+                if (Labirinto[rowAtual][columnAtual + 1] != 'X' && Labirinto[rowAtual][columnAtual + 1] != 'O') {
                     verifica3 = Labirinto(Labirinto, rowAtual, columnAtual + 1);
+
                 }
 
             } else {
-                if (Labirinto[rowAtual - 1][columnAtual] == ' ' && Labirinto[rowAtual - 1][columnAtual] != 'O') {
+                if (Labirinto[rowAtual - 1][columnAtual] != 'X' && Labirinto[rowAtual - 1][columnAtual] != 'O') {
                     verifica1 = Labirinto(Labirinto, rowAtual - 1, columnAtual);
+
                 }
-                if (Labirinto[rowAtual][columnAtual - 1] == ' ' && Labirinto[rowAtual][columnAtual - 1] != 'O') {
-                    verifica2 =  Labirinto(Labirinto, rowAtual, columnAtual - 1);
+                if (Labirinto[rowAtual][columnAtual - 1] != 'X' && Labirinto[rowAtual][columnAtual - 1] != 'O') {
+                    verifica2 = Labirinto(Labirinto, rowAtual, columnAtual - 1);
+
                 }
-                if (Labirinto[rowAtual][columnAtual + 1] == ' ' && Labirinto[rowAtual][columnAtual + 1] != 'O') {
-                    verifica2 =  Labirinto(Labirinto, rowAtual, columnAtual + 1);
+                if (Labirinto[rowAtual][columnAtual + 1] != 'X' && Labirinto[rowAtual][columnAtual + 1] != 'O') {
+                    verifica3 = Labirinto(Labirinto, rowAtual, columnAtual + 1);
+
                 }
-                if (Labirinto[rowAtual + 1][columnAtual] == ' ' && Labirinto[rowAtual + 1][columnAtual] != 'O') {
-                    verifica2 =  Labirinto(Labirinto, rowAtual + 1, columnAtual);
+                if (Labirinto[rowAtual + 1][columnAtual] != 'X' && Labirinto[rowAtual + 1][columnAtual] != 'O') {
+                    verifica4 = Labirinto(Labirinto, rowAtual + 1, columnAtual);
+
                 }
 
             }
-            if(!verifica1 && !verifica2 && !verifica3 && !verifica4) {
-                return false;
-            } else{
-                return true;
-            }
         }
-        else {
-           return true;
+        if (verifica1 || verifica2 || verifica3 || verifica4) {
+            return true;
+        } else {
+            return false;
         }
-
-
-
-    }
-
-    public Boolean Labirinto(){
-
-
     }
 
 
-    public String toString(char [][] Labirinto) {
+    public Boolean Labirinto() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Digite o nome do arquivo no qual se encontra o labirinto: ");
+        String arquivo = scanner.nextLine();
+        Labirinto = carregaLabirinto(arquivo);
+        Boolean resposta = Labirinto(Labirinto, 0, 0);
+        System.out.println("#### Verifique a resposta no documento criado. ####");
+        return resposta;
+    }
+
+
+    //Para verificar situação do labirinto se necessário
+    /*public String toString(char [][] Labirinto) {
 
         String situacaoLabirinto = "";
        for (int i = 0; i < Labirinto.length; i++) {
@@ -186,16 +216,12 @@ public class Labirinto {
             }
         }
          return situacaoLabirinto;
-    }
+    }*/
 
 }
 
 
 
-//Criar método carregaLabirinto que recebe String fileName e retorna um array bidimensional.
-//Pesquisar a utilização de charAt para percorrer todos os caracteres de uma linha
-//criar método recursivo (métodos público e privado) chamado labirinto
-//este recebe array de caracteres e retorna verdadeiro caso chegue na saida e falso caso não exista.
-//no método público deve-se chamar carregaLabirinto.
+
 
 
